@@ -1,4 +1,4 @@
-module blogkitty
+module github.com/Jaidenmagnan/blogkitty
 
 go 1.25.5
 
