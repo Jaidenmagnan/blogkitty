@@ -1,4 +1,4 @@
-module blog_kitty
+module blogkitty
 
 go 1.25.5
 
