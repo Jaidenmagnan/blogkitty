@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/Jaidenmagnan/blogkitty/commands"
+	"github.com/Jaidenmagnan/blogkitty/db"
 	"github.com/bwmarrin/discordgo"
 	"github.com/charmbracelet/log"
 	"github.com/joho/godotenv"
@@ -12,6 +13,11 @@ import (
 
 func main() {
 	godotenv.Load()
+
+	err := db.Connect()
+	if err != nil {
+		log.Fatal("could not connect to the db")
+	}
 
 	token := os.Getenv("DISCORD_TOKEN")
 	guildID := os.Getenv("GUILD_ID")
@@ -33,10 +39,29 @@ func main() {
 			Name:        "ping",
 			Description: "responds with pong",
 		},
+		{
+			Name:        "monitor",
+			Description: "Add a blog feed to your server.",
+			Options: []*discordgo.ApplicationCommandOption{
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "blog-feed",
+					Description: "The link to the rss feed of the blog you would like to monitor.",
+					Required:    true,
+				},
+				{
+					Type:        discordgo.ApplicationCommandOptionString,
+					Name:        "channel-name",
+					Description: "The name of the channel to be created which blog posts will be sent in.",
+					Required:    true,
+				},
+			},
+		},
 	}
 
 	commandHandlers := map[string]func(dg *discordgo.Session, i *discordgo.InteractionCreate){
-		"ping": commands.Ping,
+		"ping":    commands.Ping,
+		"monitor": commands.Monitor,
 	}
 
 	dg.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
@@ -55,9 +80,10 @@ func main() {
 	for i, v := range commandList {
 		cmd, err := dg.ApplicationCommandCreate(dg.State.User.ID, guildID, v)
 		if err != nil {
-			log.Error("Cannot create '%v' command: %v", v.Name, err)
+			log.Error("Cannot create '%v' command: %v", "name", v.Name, "error", err)
 			return
 		}
+		log.Info("Registered the command: ", "name", v.Name)
 		registeredCommands[i] = cmd
 	}
 
