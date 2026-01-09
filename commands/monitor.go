@@ -55,4 +55,5 @@ func Monitor(dg *discordgo.Session, i *discordgo.InteractionCreate) {
 
 	reply("Successfully created the channel **"+channel.Name+"** to monitor your feed!", dg, i)
 
+	dg.ChannelMessageSend(channel.ID, "Meow! This channel be monitoring *"+feed.FeedURL+"*.")
 }
