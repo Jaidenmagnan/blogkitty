@@ -1,7 +1,7 @@
 # blog-kitty
 Hi! Welcome to blog kitty!
 
-This discord bot written in [discordgo](https://github.com/bwmarrin/discordgo) that will simply monitor rss feeds in your server.
+This discord bot written in [discordgo](https://github.com/bwmarrin/discordgo) that will simply monitor rss feeds in your server. RSS feed channels check for new posts every 10 minutes and share any updates in the channel.
 
 You can add the bot to your server with this [link](https://discord.com/api/oauth2/authorize?client_id=1458875513719488564&permissions=2064&scope=bot%20applications.commands).
 
