@@ -39,10 +39,6 @@ func main() {
 	// We must create each of our commands here anad add the handlers.
 	commandList := []*discordgo.ApplicationCommand{
 		{
-			Name:        "ping",
-			Description: "responds with pong",
-		},
-		{
 			Name:        "monitor",
 			Description: "Add a rss feed to your server.",
 			Options: []*discordgo.ApplicationCommandOption{
@@ -64,7 +60,6 @@ func main() {
 
 	// We setup our command handlers.
 	commandHandlers := map[string]func(dg *discordgo.Session, i *discordgo.InteractionCreate){
-		"ping":    commands.Ping,
 		"monitor": commands.Monitor,
 	}
 
