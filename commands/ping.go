@@ -6,7 +6,7 @@ func Ping(dg *discordgo.Session, i *discordgo.InteractionCreate) {
 	dg.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 		Type: discordgo.InteractionResponseChannelMessageWithSource,
 		Data: &discordgo.InteractionResponseData{
-			Content: "Pong!",
+			Content: "meow",
 		},
 	})
 

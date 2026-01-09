@@ -26,3 +26,30 @@ func Connect() error {
 	log.Info("Database connected successfully")
 	return nil
 }
+
+type Feed struct {
+	ID               int64
+	LatestPostGUID   string
+	DiscordChannelID string
+	FeedURL          string
+}
+
+// Add a feed to the database and populate the ID field.
+func InsertFeed(feed Feed) (Feed, error) {
+	query := "INSERT INTO feeds (feed_url, discord_channel_id) VALUES (?, ?)"
+
+	result, err := DB.Exec(query, feed.FeedURL, feed.DiscordChannelID, feed.LatestPostGUID)
+	if err != nil {
+		log.Error("error inserting feed", err)
+		return Feed{}, err
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		log.Error("failed getting the latest inserted ID")
+		return Feed{}, err
+	}
+
+	feed.ID = id
+	return feed, nil
+}

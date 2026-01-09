@@ -30,7 +30,7 @@ func main() {
 
 	// We can put all of our event handlers here.
 	dg.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
-		log.Info("Logged in as: %v#%v", s.State.User.Username, s.State.User.Discriminator)
+		log.Info("Logged in as:", "username", s.State.User.Username, "discriminator", s.State.User.Discriminator)
 	})
 
 	// We must create each of our commands here anad add the handlers.
@@ -41,12 +41,12 @@ func main() {
 		},
 		{
 			Name:        "monitor",
-			Description: "Add a blog feed to your server.",
+			Description: "Add a rss feed to your server.",
 			Options: []*discordgo.ApplicationCommandOption{
 				{
 					Type:        discordgo.ApplicationCommandOptionString,
-					Name:        "blog-feed",
-					Description: "The link to the rss feed of the blog you would like to monitor.",
+					Name:        "rss-url",
+					Description: "The link to the rss feed you would like to monitor.",
 					Required:    true,
 				},
 				{
@@ -59,23 +59,27 @@ func main() {
 		},
 	}
 
+	// We setup our command handlers.
 	commandHandlers := map[string]func(dg *discordgo.Session, i *discordgo.InteractionCreate){
 		"ping":    commands.Ping,
 		"monitor": commands.Monitor,
 	}
 
+	// We map each of our command handlers to our commands.
 	dg.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		if h, ok := commandHandlers[i.ApplicationCommandData().Name]; ok {
 			h(s, i)
 		}
 	})
 
+	// We open the websocket connection for the bot.
 	err = dg.Open()
 	if err != nil {
 		log.Error("could not open ws connection")
 		return
 	}
 
+	// We have to actually register our commands with Discord.
 	registeredCommands := make([]*discordgo.ApplicationCommand, len(commandList))
 	for i, v := range commandList {
 		cmd, err := dg.ApplicationCommandCreate(dg.State.User.ID, guildID, v)
@@ -86,6 +90,9 @@ func main() {
 		log.Info("Registered the command: ", "name", v.Name)
 		registeredCommands[i] = cmd
 	}
+
+	// We setup a cron to check if any new posts have been made on each feed.
+	// TODO: optimize this.
 
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
