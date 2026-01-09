@@ -1,0 +1,1 @@
+tail -f blogkitty.log
