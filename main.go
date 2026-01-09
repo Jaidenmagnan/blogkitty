@@ -1,14 +1,17 @@
 package main
 
 import (
-	"github.com/Jaidenmagnan/blogkitty/commands"
-	"github.com/Jaidenmagnan/blogkitty/db"
-	"github.com/bwmarrin/discordgo"
-	"github.com/charmbracelet/log"
-	"github.com/joho/godotenv"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
+
+	"github.com/Jaidenmagnan/blogkitty/commands"
+	"github.com/Jaidenmagnan/blogkitty/db"
+	"github.com/Jaidenmagnan/blogkitty/rss"
+	"github.com/bwmarrin/discordgo"
+	"github.com/charmbracelet/log"
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -93,6 +96,16 @@ func main() {
 
 	// We setup a cron to check if any new posts have been made on each feed.
 	// TODO: optimize this.
+	go func() {
+		ticker := time.NewTicker(10 * time.Second)
+
+		defer ticker.Stop()
+
+		for range ticker.C {
+			log.Info("Cron running.")
+			rss.Update(dg)
+		}
+	}()
 
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)

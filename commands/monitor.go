@@ -43,6 +43,7 @@ func Monitor(dg *discordgo.Session, i *discordgo.InteractionCreate) {
 	feed := db.Feed{
 		DiscordChannelID: channel.ID,
 		FeedURL:          rssUrl,
+		LatestPostGUID:   "",
 	}
 
 	feed, err = db.InsertFeed(feed)
