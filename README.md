@@ -5,6 +5,8 @@ This discord bot written in [discordgo](https://github.com/bwmarrin/discordgo) t
 
 You can add the bot to your server with this [link](https://discord.com/api/oauth2/authorize?client_id=1458875513719488564&permissions=2064&scope=bot%20applications.commands).
 
+> Also.... [here](https://jmoney.world/blogkitty-an-rss-feed-manager-in-discord/) is a link to the blog post I wrote about this project.
+
 # Usage
 To use this bot, first either add it to your server or run it locally. Information for running the bot locally can be found below.
 
